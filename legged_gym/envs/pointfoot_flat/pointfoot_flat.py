@@ -96,8 +96,7 @@ class BipedPF(BaseTask):
             self.reset_buf,
             self.extras,
             self.obs_history,
-            self.commands[:, :3] * self.commands_scale,
-            self.commands[:,4],
+            self.commands[:, :4] * self.commands_scale,
             self.critic_obs_buf # make sure critic_obs update in every for loop
         )
 
@@ -132,13 +131,13 @@ class BipedPF(BaseTask):
             env_ids, 0
         ]
         if self.cfg.commands.heading_command:
-            self.commands[env_ids, 3] = torch_rand_float(
+            self.commands[env_ids, 4] = torch_rand_float(
                 self.command_ranges["heading"][0],
                 self.command_ranges["heading"][1],
                 (len(env_ids), 1),
                 device=self.device,
             ).squeeze(1)
-        self.commands[env_ids,4] = torch.rand(len(env_ids), device=self.device)*(0.68-0.32)+0.32
+        self.commands[env_ids,3] = torch.rand(len(env_ids), device=self.device)*(0.68-0.32)+0.32
         # set small commands to zero
         # self.commands[env_ids, :2] *= (
         #     torch.norm(self.commands[env_ids, :2], dim=1) > self.cfg.commands.min_norm
@@ -152,7 +151,8 @@ class BipedPF(BaseTask):
             .nonzero(as_tuple=False)
             .flatten()
         )
-        self.commands[zero_command_idx, :3] = 0
+        self.commands[zero_command_idx, :2] = 0
+        self.commands[zero_command_idx,4] = 0
         if self.cfg.commands.heading_command:
             forward = quat_apply(
                 self.base_quat[zero_command_idx], self.forward_vec[zero_command_idx]
@@ -326,7 +326,7 @@ class BipedPF(BaseTask):
 
     def _reward_command_height(self):
         base_height = torch.mean(self.root_states[:, 2].unsqueeze(1) - self.measured_heights, dim=1)
-        return torch.square(base_height - self.commands[:,4])
+        return torch.square(base_height - self.commands[:,3])
     
     def _reward_torques(self):
         # Penalize torques

@@ -319,10 +319,12 @@ class BipedPF(BaseTask):
         )
         critic_obs_buf = torch.cat((
             self.base_lin_vel * self.obs_scales.lin_vel, 
+            self.contact_forces[:,self.feet_indices,:].view(self.num_envs,-1),
+            self.torques,
+            self.dof_acc,
             self.noise_scale_vec.repeat(self.num_envs,1),
             self.p_gains,
             self.d_gains,
-            self.torques_scale,
             self.random_imu_offset,
             self.base_com,
             self.obs_buf), dim=-1)
@@ -408,7 +410,7 @@ class BipedPF(BaseTask):
         return reward / len(self.feet_indices)
 
     def _reward_tracking_contacts_shaped_vel(self):
-        foot_velocities = torch.norm(self.foot_velocities, dim=-1)
+        foot_velocities = torch.norm(self.foot_velocities[:,:,:2], dim=-1)
         desired_contact = self.desired_contact_states
         reward = 0
         if self.reward_scales["tracking_contacts_shaped_vel"] > 0:
@@ -429,7 +431,7 @@ class BipedPF(BaseTask):
         return reward
 
     def _reward_feet_regulation(self):
-        feet_height = self.cfg.rewards.base_height_target * 0.001
+        feet_height = self.cfg.rewards.base_height_target * 0.025
         reward = torch.sum(
             torch.exp(-self.foot_heights / feet_height)
             * torch.square(torch.norm(self.foot_velocities[:, :, :2], dim=-1)), dim=1)

@@ -35,7 +35,7 @@ robot_type = os.getenv("ROBOT_TYPE")
 
 class BipedCfgPF(BaseConfig):
     class env:
-        num_envs = 15
+        num_envs = 8192
         num_observations = 30
         num_critic_observations = 100
         num_height_samples = 117

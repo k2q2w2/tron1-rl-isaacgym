@@ -90,7 +90,7 @@ class BipedCfgPF(BaseConfig):
         )
 
     class commands:
-        curriculum = False
+        curriculum = True
         smooth_max_lin_vel_x = 2.0
         smooth_max_lin_vel_y = 1.0
         non_smooth_max_lin_vel_x = 1.0
@@ -120,8 +120,8 @@ class BipedCfgPF(BaseConfig):
         resampling_time = 5  # time before command are changed[s]
 
         class ranges:
-            frequencies = [1.5, 2.5]
-            offsets = [0, 1]  # offset is hard to learn
+            frequencies = [1.5, 3.5]
+            offsets = [0.45, 0.55]  # offset is hard to learn
             # durations = [0.3, 0.8]  # small durations(<0.4) is hard to learn
             # frequencies = [2, 2]
             # offsets = [0.5, 0.5]
@@ -270,7 +270,7 @@ class BipedCfgPF(BaseConfig):
         )
         soft_dof_vel_limit = 1.0
         soft_torque_limit = 0.8
-        base_height_target = 0.68 # 0.58
+        base_height_target = 0.56 # 0.58
         feet_height_target = 0.10
         min_feet_distance = 0.115
         about_landing_threshold = 0.08

@@ -138,6 +138,7 @@ class BaseTask:
             self.obs_buf,
             self.obs_history,
             self.commands[:, :3] * self.commands_scale,
+            self.commands[:,4],
             self.critic_obs_buf
         )
 

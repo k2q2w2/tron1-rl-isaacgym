@@ -97,6 +97,7 @@ class BipedPF(BaseTask):
             self.extras,
             self.obs_history,
             self.commands[:, :3] * self.commands_scale,
+            self.commands[:,4],
             self.critic_obs_buf # make sure critic_obs update in every for loop
         )
 

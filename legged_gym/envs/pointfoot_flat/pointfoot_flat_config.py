@@ -48,7 +48,7 @@ class BipedCfgPF(BaseConfig):
         fail_to_terminal_time_s = 0.5
 
     class terrain:
-        mesh_type = "plane"  # "heightfield" # none, plane, heightfield or trimesh
+        mesh_type = "trimesh"  # "heightfield" # none, plane, heightfield or trimesh
         horizontal_scale = 0.1  # [m]
         vertical_scale = 0.005  # [m]
         border_size = 25  # [m]
@@ -77,7 +77,7 @@ class BipedCfgPF(BaseConfig):
         measured_points_y = [-0.4, -0.3, -0.2, -0.1, 0.0, 0.1, 0.2, 0.3, 0.4]
         selected = False  # select a unique terrain type and pass all arguments
         terrain_kwargs = None  # Dict of arguments for selected terrain
-        max_init_terrain_level = 5 + 4  # starting curriculum state
+        max_init_terrain_level = 5 # starting curriculum state
         terrain_length = 8.0
         terrain_width = 8.0
         num_rows = 10  # number of terrain rows (levels)
@@ -105,7 +105,7 @@ class BipedCfgPF(BaseConfig):
 
         class ranges:
             lin_vel_x = [-1.0, 1.0]  # min max [m/s]
-            lin_vel_y = [-0.6, 0.6]  # min max [m/s]
+            lin_vel_y = [-0.0, 0.0]  # min max [m/s]
             # lin_vel_x = [-1.7, 1.7]  # min max [m/s]
             # lin_vel_y = [-1.7, 1.7]  # min max [m/s]
             ang_vel_yaw = [-1, 1]  # min max [rad/s]

@@ -137,7 +137,7 @@ class BipedPF(BaseTask):
                 (len(env_ids), 1),
                 device=self.device,
             ).squeeze(1)
-
+        self.commands[env_ids,4] = torch.rand(len(env_ids), device=self.device)*(0.68-0.32)+0.32
         # set small commands to zero
         # self.commands[env_ids, :2] *= (
         #     torch.norm(self.commands[env_ids, :2], dim=1) > self.cfg.commands.min_norm
@@ -323,6 +323,10 @@ class BipedPF(BaseTask):
         base_height = torch.mean(self.root_states[:, 2].unsqueeze(1) - self.measured_heights, dim=1)
         return torch.square(base_height - self.cfg.rewards.base_height_target)
 
+    def _reward_command_height(self):
+        base_height = torch.mean(self.root_states[:, 2].unsqueeze(1) - self.measured_heights, dim=1)
+        return torch.square(base_height - self.commands[:,4])
+    
     def _reward_torques(self):
         # Penalize torques
         return torch.sum(torch.square(self.torques), dim=1)

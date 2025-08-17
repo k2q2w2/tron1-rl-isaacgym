@@ -90,14 +90,14 @@ class BipedCfgPF(BaseConfig):
         )
 
     class commands:
-        curriculum = True
+        curriculum = False
         smooth_max_lin_vel_x = 2.0
         smooth_max_lin_vel_y = 1.0
         non_smooth_max_lin_vel_x = 1.0
         non_smooth_max_lin_vel_y = 1.0
         max_ang_vel_yaw = 3.0
         curriculum_threshold = 0.75
-        num_commands = 3  # default: lin_vel_x, lin_vel_y, ang_vel_yaw, heading (in heading mode ang_vel_yaw is recomputed from heading error)
+        num_commands = 4  # default: lin_vel_x, lin_vel_y, ang_vel_yaw, heading (in heading mode ang_vel_yaw is recomputed from heading error)
         resampling_time = 5.0  # time before command are changed[s]
         heading_command = True  # if true: compute ang vel command from heading error, only work on adaptive group
         min_norm = 0.1
@@ -231,11 +231,12 @@ class BipedCfgPF(BaseConfig):
             keep_balance = 1.0
 
             # tracking related rewards
-            tracking_lin_vel = 1
-            tracking_ang_vel = 0.5
+            tracking_lin_vel = 3.0
+            tracking_ang_vel = 1.5
 
             # regulation related rewards
-            base_height = -2
+            base_height = 0
+            command_height=-4
             lin_vel_z = -0.5
             ang_vel_xy = -0.05
             torques = -0.00008

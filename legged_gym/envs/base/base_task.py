@@ -1013,7 +1013,7 @@ class BaseTask:
     def compute_observations(self):
         """Computes observations"""
         self.obs_buf, self.critic_obs_buf = self.compute_group_observations()
-
+        #print(self.obs_buf.shape)
         # add noise if needed
         if self.add_noise:
             self.obs_buf += (

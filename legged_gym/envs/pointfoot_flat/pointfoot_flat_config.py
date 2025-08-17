@@ -35,7 +35,7 @@ robot_type = os.getenv("ROBOT_TYPE")
 
 class BipedCfgPF(BaseConfig):
     class env:
-        num_envs = 8192
+        num_envs = 80
         num_observations = 30
         num_critic_observations = 88
         num_height_samples = 117
@@ -97,7 +97,7 @@ class BipedCfgPF(BaseConfig):
         non_smooth_max_lin_vel_y = 1.0
         max_ang_vel_yaw = 3.0
         curriculum_threshold = 0.75
-        use_height_commands = False
+        use_height_commands = True
         if use_height_commands:
             num_commands = 4  # default: lin_vel_x, lin_vel_y, ang_vel_yaw, heading (in heading mode ang_vel_yaw is recomputed from heading error)
         else:

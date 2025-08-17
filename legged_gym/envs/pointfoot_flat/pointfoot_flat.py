@@ -96,7 +96,7 @@ class BipedPF(BaseTask):
             self.reset_buf,
             self.extras,
             self.obs_history,
-            self.commands[:, :4] * self.commands_scale,
+            self.commands[:, 0:self.cfg.commands.num_commands] * self.commands_scale,
             self.critic_obs_buf # make sure critic_obs update in every for loop
         )
 
@@ -130,14 +130,24 @@ class BipedPF(BaseTask):
         ][
             env_ids, 0
         ]
+        if self.cfg.commands.use_height_commands:
+            self.commands[env_ids,3] = torch.rand(len(env_ids), device=self.device)*(0.68-0.32)+0.32
         if self.cfg.commands.heading_command:
-            self.commands[env_ids, 4] = torch_rand_float(
-                self.command_ranges["heading"][0],
-                self.command_ranges["heading"][1],
-                (len(env_ids), 1),
-                device=self.device,
-            ).squeeze(1)
-        self.commands[env_ids,3] = torch.rand(len(env_ids), device=self.device)*(0.68-0.32)+0.32
+            if self.cfg.commands.use_height_commands:
+                self.commands[env_ids, 4] = torch_rand_float(
+                    self.command_ranges["heading"][0],
+                    self.command_ranges["heading"][1],
+                    (len(env_ids), 1),
+                    device=self.device,
+                ).squeeze(1)
+            else:
+                self.commands[env_ids, 3] = torch_rand_float(
+                    self.command_ranges["heading"][0],
+                    self.command_ranges["heading"][1],
+                    (len(env_ids), 1),
+                    device=self.device,
+                ).squeeze(1)
+
         # set small commands to zero
         # self.commands[env_ids, :2] *= (
         #     torch.norm(self.commands[env_ids, :2], dim=1) > self.cfg.commands.min_norm
@@ -152,13 +162,19 @@ class BipedPF(BaseTask):
             .flatten()
         )
         self.commands[zero_command_idx, :2] = 0
-        self.commands[zero_command_idx,4] = 0
+        if self.cfg.commands.use_height_commands:
+            self.commands[zero_command_idx,4] = 0
+        else:
+            self.commands[zero_command_idx,3] = 0
         if self.cfg.commands.heading_command:
             forward = quat_apply(
                 self.base_quat[zero_command_idx], self.forward_vec[zero_command_idx]
             )
             heading = torch.atan2(forward[:, 1], forward[:, 0])
-            self.commands[zero_command_idx, 3] = heading
+            if self.cfg.commands.use_height_commands:
+                self.commands[zero_command_idx, 4] = heading
+            else:
+                self.commands[zero_command_idx,3] = heading
 
     def _compute_torques(self, actions):
         """Compute torques from actions.
@@ -302,7 +318,14 @@ class BipedPF(BaseTask):
             dim=-1,
         )
         critic_obs_buf = torch.cat((
-            self.base_lin_vel * self.obs_scales.lin_vel, self.obs_buf), dim=-1)
+            self.base_lin_vel * self.obs_scales.lin_vel, 
+            self.noise_scale_vec.repeat(self.num_envs,1),
+            self.p_gains,
+            self.d_gains,
+            self.torques_scale,
+            self.random_imu_offset,
+            self.base_com,
+            self.obs_buf), dim=-1)
         return obs_buf, critic_obs_buf
     
     # --------------------------- reward functions---------------------------

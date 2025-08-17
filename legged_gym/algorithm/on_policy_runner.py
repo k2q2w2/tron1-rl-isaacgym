@@ -163,6 +163,7 @@ class OnPolicyRunner:
             # Rollout
             with torch.inference_mode():
                 for i in range(self.num_steps_per_env):
+                    #print(critic_obs.shape)
                     actions = self.alg.act(obs, obs_history, commands, critic_obs)
                     # add critic_obs_buf to step returns, make sure it updates in every for loop
                     (obs, rewards, dones, infos, obs_history, commands, critic_obs_buf) = self.env.step(actions)

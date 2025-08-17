@@ -137,7 +137,7 @@ class BaseTask:
         return (
             self.obs_buf,
             self.obs_history,
-            self.commands[:, :4] * self.commands_scale,
+            self.commands[:, 0:self.cfg.commands.num_commands] * self.commands_scale,
             self.critic_obs_buf
         )
 
@@ -674,7 +674,10 @@ class BaseTask:
         if self.cfg.commands.heading_command:
             forward = quat_apply(self.base_quat, self.forward_vec)
             heading = torch.atan2(forward[:, 1], forward[:, 0])
-            self.commands[:, 2] = 1.0 * wrap_to_pi(self.commands[:, 4] - heading)
+            if self.cfg.commands.use_height_commands:
+                self.commands[:, 2] = 1.0 * wrap_to_pi(self.commands[:, 4] - heading)
+            else:
+                self.commands[:, 2] = 1.0 * wrap_to_pi(self.commands[:, 3] - heading)                
 
         if self.cfg.terrain.measure_heights or self.cfg.terrain.critic_measure_heights:
             self.measured_heights = self._get_heights()
@@ -1330,12 +1333,19 @@ class BaseTask:
                 device=self.device,
                 requires_grad=False,
             )  # x vel, y vel, yaw vel, heading
-        self.commands_scale = torch.tensor(
-            [self.obs_scales.lin_vel, self.obs_scales.lin_vel, self.obs_scales.ang_vel,
-             self.obs_scales.height],
-            device=self.device,
-            requires_grad=False,
-        )  # TODO change this
+        if self.cfg.commands.use_height_commands:
+            self.commands_scale = torch.tensor(
+                [self.obs_scales.lin_vel, self.obs_scales.lin_vel, self.obs_scales.ang_vel,
+                self.obs_scales.height],
+                device=self.device,
+                requires_grad=False,
+            )  
+        else:
+            self.commands_scale = torch.tensor(
+                [self.obs_scales.lin_vel, self.obs_scales.lin_vel, self.obs_scales.ang_vel],
+                device=self.device,
+                requires_grad=False,
+            )  
         self.command_ranges["lin_vel_x"] = torch.zeros(
             self.num_envs,
             2,

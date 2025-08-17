@@ -35,15 +35,15 @@ robot_type = os.getenv("ROBOT_TYPE")
 
 class BipedCfgPF(BaseConfig):
     class env:
-        num_envs = 4096*2
+        num_envs = 8192
         num_observations = 30
-        num_critic_observations = 3 + num_observations
+        num_critic_observations = 88
         num_height_samples = 117
         num_actions = 6
         env_spacing = 3.0  # not used with heightfields/trimeshes
         send_timeouts = True  # send time out information to the algorithm
         episode_length_s = 20  # episode length in seconds
-        obs_history_length = 10  # number of observations stacked together
+        obs_history_length = 5  # number of observations stacked together
         dof_vel_use_pos_diff = True
         fail_to_terminal_time_s = 0.5
 
@@ -77,7 +77,7 @@ class BipedCfgPF(BaseConfig):
         measured_points_y = [-0.4, -0.3, -0.2, -0.1, 0.0, 0.1, 0.2, 0.3, 0.4]
         selected = False  # select a unique terrain type and pass all arguments
         terrain_kwargs = None  # Dict of arguments for selected terrain
-        max_init_terrain_level = 5 # starting curriculum state
+        max_init_terrain_level = 1 # starting curriculum state
         terrain_length = 8.0
         terrain_width = 8.0
         num_rows = 10  # number of terrain rows (levels)
@@ -97,7 +97,11 @@ class BipedCfgPF(BaseConfig):
         non_smooth_max_lin_vel_y = 1.0
         max_ang_vel_yaw = 3.0
         curriculum_threshold = 0.75
-        num_commands = 4  # default: lin_vel_x, lin_vel_y, ang_vel_yaw, heading (in heading mode ang_vel_yaw is recomputed from heading error)
+        use_height_commands = False
+        if use_height_commands:
+            num_commands = 4  # default: lin_vel_x, lin_vel_y, ang_vel_yaw, heading (in heading mode ang_vel_yaw is recomputed from heading error)
+        else:
+            num_commands=3
         resampling_time = 5.0  # time before command are changed[s]
         heading_command = True  # if true: compute ang vel command from heading error, only work on adaptive group
         min_norm = 0.1
@@ -196,13 +200,13 @@ class BipedCfgPF(BaseConfig):
 
     class domain_rand:
         randomize_friction = True
-        friction_range = [0.0, 1.6]
+        friction_range = [0.2, 1.7]
         randomize_restitution = True
-        restitution_range = [0.0, 1.0]
+        restitution_range = [0.25, 0.75]
         randomize_base_mass = True
-        added_mass_range = [-0.5, 5]
+        added_mass_range = [-1, 3]
         randomize_base_com = True
-        rand_com_vec = [0.03, 0.02, 0.03]
+        rand_com_vec = [0.075, 0.05, 0.05]
         randomize_inertia = True
         randomize_inertia_range = [0.8, 1.2]
         push_robots = True
@@ -231,21 +235,24 @@ class BipedCfgPF(BaseConfig):
             keep_balance = 1.0
 
             # tracking related rewards
-            tracking_lin_vel = 3.0
-            tracking_ang_vel = 1.5
+            tracking_lin_vel = 1.0
+            tracking_ang_vel = 0.5
 
             # regulation related rewards
-            base_height = 0
-            command_height=-4
+
+            command_height=-0
             lin_vel_z = -0.5
             ang_vel_xy = -0.05
-            torques = -0.00008
             dof_acc = -2.5e-7
+            #joint power
+            torques = -1e-4
+            base_height = -1 
             action_rate = -0.01
-            dof_pos_limits = -2.0
-            collision = -1
             action_smooth = -0.01
-            orientation = -10.0
+            collision = -1
+            #joint_limit
+            dof_pos_limits = -2.0
+            orientation = -5.0
             feet_distance = -100
             feet_regulation = -0.05
             foot_landing_vel = -0.15

@@ -240,13 +240,13 @@ class BipedCfgPF(BaseConfig):
 
             # regulation related rewards
 
-            command_height=-0
+            command_height=-1.0
             lin_vel_z = -0.5
             ang_vel_xy = -0.05
             dof_acc = -2.5e-7
             #joint power
             torques = -1e-4
-            base_height = -1 
+            base_height = -0.0
             action_rate = -0.01
             action_smooth = -0.01
             collision = -1
@@ -381,7 +381,7 @@ class BipedCfgPPOPF(BaseConfig):
         policy_class_name = "ActorCritic"
         algorithm_class_name = "PPO"
         num_steps_per_env = 24  # per iteration
-        max_iterations = 15000  # number of policy updates
+        max_iterations = 8000  # number of policy updates
 
         # logging
         logger = "tensorboard"

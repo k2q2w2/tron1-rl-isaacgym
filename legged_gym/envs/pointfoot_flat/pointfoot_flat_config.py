@@ -344,8 +344,8 @@ class BipedCfgPPOPF(BaseConfig):
     class MLP_Encoder:
         output_detach = True
         num_input_dim = BipedCfgPF.env.num_observations * BipedCfgPF.env.obs_history_length
-        num_output_dim = 3
-        hidden_dims = [256, 128]
+        num_output_dim = 32
+        hidden_dims = [512, 256]
         activation = "elu"
         orthogonal_init = False
 

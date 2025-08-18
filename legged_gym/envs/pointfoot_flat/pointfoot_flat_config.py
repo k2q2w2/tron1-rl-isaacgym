@@ -391,7 +391,7 @@ class BipedCfgPPOPF(BaseConfig):
         experiment_name = robot_type
         run_name = ""
         # load and resume
-        resume = True
+        resume = False
         load_run = -1  # -1 = last run
-        checkpoint = -1  # -1 = last saved model
-        resume_path = "None"  # updated from load_run and chkpt
+        checkpoint = 10000  # -1 = last saved model
+        resume_path = "10000"  # updated from load_run and chkpt

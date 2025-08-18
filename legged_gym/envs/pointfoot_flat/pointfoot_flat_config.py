@@ -240,7 +240,7 @@ class BipedCfgPF(BaseConfig):
 
             # regulation related rewards
 
-            command_height=-15.0
+            command_height=-35.0
             lin_vel_z = -0.5
             ang_vel_xy = -0.05
             dof_acc = -2.5e-7

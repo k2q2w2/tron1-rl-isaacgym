@@ -345,7 +345,7 @@ class BipedCfgPPOPF(BaseConfig):
         output_detach = True
         num_input_dim = BipedCfgPF.env.num_observations * BipedCfgPF.env.obs_history_length
         num_output_dim = 3
-        hidden_dims = [256, 518]
+        hidden_dims = [256, 128]
         activation = "elu"
         orthogonal_init = False
 
@@ -392,6 +392,6 @@ class BipedCfgPPOPF(BaseConfig):
         run_name = ""
         # load and resume
         resume = True
-        load_run = "-1"  # -1 = last run
+        load_run = -1  # -1 = last run
         checkpoint = -1  # -1 = last saved model
         resume_path = "None"  # updated from load_run and chkpt

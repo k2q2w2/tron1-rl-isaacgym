@@ -90,7 +90,7 @@ class BipedCfgPF(BaseConfig):
         )
 
     class commands:
-        curriculum = True
+        curriculum = False
         smooth_max_lin_vel_x = 2.0
         smooth_max_lin_vel_y = 1.0
         non_smooth_max_lin_vel_x = 1.0
@@ -120,8 +120,8 @@ class BipedCfgPF(BaseConfig):
         resampling_time = 5  # time before command are changed[s]
 
         class ranges:
-            frequencies = [1.5, 3.5]
-            offsets = [0.45, 0.55]  # offset is hard to learn
+            frequencies = [1.5, 2.5]
+            offsets = [0, 1]  # offset is hard to learn
             # durations = [0.3, 0.8]  # small durations(<0.4) is hard to learn
             # frequencies = [2, 2]
             # offsets = [0.5, 0.5]
@@ -246,7 +246,7 @@ class BipedCfgPF(BaseConfig):
             dof_acc = -2.5e-7
             #joint power
             torques = -1e-4
-            base_height = -1 
+            base_height = -15
             action_rate = -0.01
             action_smooth = -0.01
             collision = -1
@@ -266,11 +266,11 @@ class BipedCfgPF(BaseConfig):
         ang_tracking_sigma = 0.25  # tracking reward = exp(-error^2/sigma)
         height_tracking_sigma = 0.01
         soft_dof_pos_limit = (
-            0.95  # percentage of urdf limits, values above this limit are penalized
+            0.80  # percentage of urdf limits, values above this limit are penalized
         )
         soft_dof_vel_limit = 1.0
         soft_torque_limit = 0.8
-        base_height_target = 0.56 # 0.58
+        base_height_target = 0.48 # 0.58
         feet_height_target = 0.10
         min_feet_distance = 0.115
         about_landing_threshold = 0.08
@@ -392,6 +392,6 @@ class BipedCfgPPOPF(BaseConfig):
         run_name = ""
         # load and resume
         resume = False
-        load_run = -1  # -1 = last run
-        checkpoint = 10000  # -1 = last saved model
-        resume_path = "10000"  # updated from load_run and chkpt
+        load_run = "-1"  # -1 = last run
+        checkpoint = -1  # -1 = last saved model
+        resume_path = "None"  # updated from load_run and chkpt

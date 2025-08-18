@@ -670,7 +670,7 @@ class BaseTask:
         self._resample_commands(env_ids)
         self._resample_gaits(env_ids)
         self._step_contact_targets()
-
+        #print(self.commands[0,3])
         if self.cfg.commands.heading_command:
             forward = quat_apply(self.base_quat, self.forward_vec)
             heading = torch.atan2(forward[:, 1], forward[:, 0])
@@ -678,7 +678,7 @@ class BaseTask:
                 self.commands[:, 2] = 1.0 * wrap_to_pi(self.commands[:, 4] - heading)
             else:
                 self.commands[:, 2] = 1.0 * wrap_to_pi(self.commands[:, 3] - heading)                
-
+        #print(self.commands[0,3])
         if self.cfg.terrain.measure_heights or self.cfg.terrain.critic_measure_heights:
             self.measured_heights = self._get_heights()
 

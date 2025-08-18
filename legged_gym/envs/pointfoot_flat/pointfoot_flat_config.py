@@ -240,7 +240,7 @@ class BipedCfgPF(BaseConfig):
 
             # regulation related rewards
 
-            command_height=-1.0
+            command_height=-5.0
             lin_vel_z = -0.5
             ang_vel_xy = -0.05
             dof_acc = -2.5e-7
@@ -392,6 +392,6 @@ class BipedCfgPPOPF(BaseConfig):
         run_name = ""
         # load and resume
         resume = False
-        load_run = "-1"  # -1 = last run
+        load_run = -1  # -1 = last run
         checkpoint = -1  # -1 = last saved model
         resume_path = "None"  # updated from load_run and chkpt

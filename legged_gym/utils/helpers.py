@@ -118,6 +118,7 @@ def get_load_path(root, load_run=-1, checkpoint=-1):
         last_run = os.path.join(root, runs[-1])
     except:
         raise ValueError("No runs in this directory: " + root)
+    load_run = -1
     if load_run == -1:
         load_run = last_run
     else:
@@ -129,8 +130,9 @@ def get_load_path(root, load_run=-1, checkpoint=-1):
         model = models[-1]
     else:
         model = "model_{}.pt".format(checkpoint)
-
+    model ="model_10000.pt"
     load_path = os.path.join(load_run, model)
+    print("load_path:"+load_path)
     return load_path
 
 

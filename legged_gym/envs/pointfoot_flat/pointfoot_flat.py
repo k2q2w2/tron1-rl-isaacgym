@@ -131,7 +131,8 @@ class BipedPF(BaseTask):
             env_ids, 0
         ]
         if self.cfg.commands.use_height_commands:
-            self.commands[env_ids,3] = torch.rand(len(env_ids), device=self.device)*(0.68-0.32)+0.32
+            self.commands[env_ids,3] = torch.rand((len(env_ids)), device=self.device)*0.35+0.35
+            #print(self.commands[:,3])
         if self.cfg.commands.heading_command:
             if self.cfg.commands.use_height_commands:
                 self.commands[env_ids, 4] = torch_rand_float(
@@ -175,6 +176,7 @@ class BipedPF(BaseTask):
                 self.commands[zero_command_idx, 4] = heading
             else:
                 self.commands[zero_command_idx,3] = heading
+        #print(self.commands[:,3])
 
     def _compute_torques(self, actions):
         """Compute torques from actions.

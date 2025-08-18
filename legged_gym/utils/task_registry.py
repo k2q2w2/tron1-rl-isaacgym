@@ -212,6 +212,7 @@ class TaskRegistry:
         resume = train_cfg.runner.resume
         if resume:
             # load previously trained model
+            print(train_cfg.runner.load_run)
             resume_path = get_load_path(
                 log_root,
                 load_run=train_cfg.runner.load_run,
